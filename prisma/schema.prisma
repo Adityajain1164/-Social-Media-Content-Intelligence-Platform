@@ -1,0 +1,66 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id               String            @id // must match Supabase auth.users.id — no @default here
+  email            String            @unique
+  createdAt        DateTime          @default(now())
+  linkedinAccounts LinkedInAccount[]
+  campaigns        Campaign[]
+}
+
+model LinkedInAccount {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  linkedinUrn  String // e.g. urn:li:person:abc123
+  accessToken  String // Encrypted at the application layer before write
+  refreshToken String? // Encrypted at the application layer before write
+  expiresAt    DateTime
+  connectedAt  DateTime @default(now())
+}
+
+model Campaign {
+  id             String          @id @default(uuid())
+  userId         String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic          String
+  tonePersona    String?
+  frequency      String // "daily" | "3x_week" | "weekly"
+  timezone       String          @default("UTC")
+  status         String          @default("active") // "active" | "paused"
+  nextRunAt      DateTime
+  createdAt      DateTime        @default(now())
+  runs           CampaignRun[]
+  postedArticles PostedArticle[]
+}
+
+model CampaignRun {
+  id              String    @id @default(uuid())
+  campaignId      String
+  campaign        Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  status          String // "queued" | "running" | "success" | "failed"
+  startedAt       DateTime  @default(now())
+  finishedAt      DateTime?
+  error           String?
+  pdfUrl          String?
+  linkedinPostUrl String?
+}
+
+// Dedup log — n8n's AI selector reads recent hashes from here (via the trigger
+// payload) so it never re-selects the same article for the same campaign.
+model PostedArticle {
+  id           String   @id @default(uuid())
+  campaignId   String
+  campaign     Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  hashId       String
+  articleTitle String
+  postDate     DateTime @default(now())
+
+  @@index([campaignId, hashId])
+}
