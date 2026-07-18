@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Social Media Content Intelligence Platform
 
-## Getting Started
+An automated SaaS platform designed to generate, schedule, and seamlessly publish high-impact LinkedIn carousels and content briefs using advanced AI agents.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **AI-Driven Market Intelligence**: Automated ingestion and ranking of fresh tech articles, market data, and industry trends without hallucinations.
+- **Dynamic Content Engine**: Automatically formats raw technical data into highly optimized, LinkedIn-ready portrait (4:5) HTML/CSS carousel templates.
+- **Automated Campaign Scheduler**: A robust cron-based scheduling layer tracking custom frequencies (daily, multi-day, weekly) for multiple concurrent campaigns.
+- **Secure Native Publishing**: Built-in OAuth flow with LinkedIn's API for hands-free direct publishing, leveraging secure token encryption (`AES-256-GCM`).
+- **Distributed Workflow Orchestration**: Powered by n8n webhook triggers to handle complex backend processing, payload generation, and callback validation.
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js (App Router) with TypeScript
+- **Database**: Supabase (PostgreSQL)
+- **ORM**: Prisma
+- **Automation / Orchestration**: n8n, Cron-job.org
+- **Deployment**: Vercel
+
+## ⚙️ Environment Variables Setup
+
+Create a `.env` file in your root directory and configure the following variables (do not commit this file to version control):
+
+```env
+# Database Connections
+DATABASE_URL="your-supabase-connection-string"
+DIRECT_DATABASE_URL="your-supabase-direct-connection-string"
+
+# Supabase Keys
+SUPABASE_URL="your-supabase-project-url"
+SUPABASE_ANON_KEY="your-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
+
+# Workflow & Secret Verification
+APP_URL="http://localhost:3000"
+CRON_SECRET="your-secure-cron-handshake-secret"
+TOKEN_ENCRYPTION_KEY="your-32-byte-encryption-key"
+
+# Integrations
+N8N_WEBHOOK_URL="your-n8n-webhook-endpoint"
+N8N_WEBHOOK_SECRET="your-n8n-secret"
+N8N_CALLBACK_SECRET="your-n8n-callback-secret"
+LINKEDIN_CLIENT_ID="your-linkedin-client-id"
+LINKEDIN_CLIENT_SECRET="your-linkedin-client-secret"
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
