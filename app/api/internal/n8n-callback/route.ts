@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
 
 export async function POST(request: Request) {
   try {
@@ -47,7 +46,7 @@ export async function POST(request: Request) {
       const { pdf_url, linkedin_post_url, selected_articles } = payload;
 
       // Update database inside a transaction
-      await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      await prisma.$transaction(async (tx: any) => {
         // 1. Update CampaignRun
         if (runId) {
           await tx.campaignRun.update({
