@@ -130,11 +130,13 @@ export async function POST(request: Request) {
           postDate: true,
         },
       });
-      const previouslyPostedArticles = postedArticles.map((art) => ({
-        hash_id: art.hashId,
-        title: art.articleTitle,
-        post_date: art.postDate.toISOString(),
-      }));
+      const previouslyPostedArticles = postedArticles.map(
+        (art: { hashId: string; articleTitle: string; postDate: Date }) => ({
+          hash_id: art.hashId,
+          title: art.articleTitle,
+          post_date: art.postDate.toISOString(),
+        })
+      );
 
       // Create a new CampaignRun row in 'queued' status
       const run = await prisma.campaignRun.create({
