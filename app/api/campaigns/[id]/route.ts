@@ -1,21 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
-
-// Helper to compute next run time
-function getNextRunAt(frequency: string): Date {
-  const now = new Date();
-  switch (frequency) {
-    case 'daily':
-      return new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    case '3x_week':
-      return new Date(now.getTime() + 56 * 60 * 60 * 1000);
-    case 'weekly':
-      return new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    default:
-      return new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  }
-}
+import { getNextRunAt } from '@/lib/scheduler';
 
 interface Params {
   params: Promise<{

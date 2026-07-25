@@ -1,21 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { decrypt } from '@/lib/encryption';
-
-// Helper to compute next run time
-function getNextRunAt(frequency: string): Date {
-  const now = new Date();
-  switch (frequency) {
-    case 'daily':
-      return new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    case '3x_week':
-      return new Date(now.getTime() + 56 * 60 * 60 * 1000);
-    case 'weekly':
-      return new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    default:
-      return new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  }
-}
+import { getNextRunAt } from '@/lib/scheduler';
 
 export async function POST(request: Request) {
   try {
@@ -63,7 +49,7 @@ export async function POST(request: Request) {
       });
 
       // Compute the next run time to advance the schedule
-      const nextScheduledRun = getNextRunAt(campaign.frequency);
+      const nextScheduledRun = getNextRunAt(campaign.frequency, new Date(campaign.nextRunAt));
 
       // Check if LinkedIn connection exists and is not expired
       if (!account || account.expiresAt.getTime() <= Date.now()) {

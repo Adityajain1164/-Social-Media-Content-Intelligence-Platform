@@ -1,21 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
-
-// Helper to compute next run time
-function getNextRunAt(frequency: string): Date {
-  const now = new Date();
-  switch (frequency) {
-    case 'daily':
-      return new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    case '3x_week':
-      return new Date(now.getTime() + 56 * 60 * 60 * 1000);
-    case 'weekly':
-      return new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    default:
-      return new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  }
-}
+import { getNextRunAt } from '@/lib/scheduler';
 
 export async function GET() {
   const supabase = await createClient();
@@ -62,7 +48,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid frequency. Expected daily, 3x_week, or weekly.' }, { status: 400 });
     }
 
-    const computedNextRunAt = getNextRunAt(frequency);
+    const computedNextRunAt = new Date(); // first run fires on next scheduler tick, regardless of frequency
     const resolvedTimezone = timezone || 'UTC';
 
     const campaign = await prisma.campaign.create({
