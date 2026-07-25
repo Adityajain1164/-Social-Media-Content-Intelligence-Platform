@@ -26,7 +26,8 @@ export async function GET() {
     maxAge: 300, // 5 minutes
   });
 
-  const redirectUri = 'http://localhost:3000/api/auth/linkedin/callback';
+  const appUrl = process.env.APP_URL || 'http://localhost:3000';
+  const redirectUri = `${appUrl}/api/auth/linkedin/callback`;
   const scope = encodeURIComponent('openid profile w_member_social');
 
   const authorizeUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&scope=${scope}`;

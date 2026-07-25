@@ -51,7 +51,8 @@ export async function GET(request: Request) {
     );
   }
 
-  const redirectUri = 'http://localhost:3000/api/auth/linkedin/callback';
+  const appUrl = process.env.APP_URL || 'http://localhost:3000';
+  const redirectUri = `${appUrl}/api/auth/linkedin/callback`;
 
   try {
     // 3. Exchange authorization code for tokens
